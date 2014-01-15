@@ -401,10 +401,17 @@ static int statement_fetch_impl(lua_State *L, statement_t *statement, int named_
 							LUA_PUSH_ARRAY_STRING(d, str);
 						}
 					} else {
+						size_t length = bind[i].buffer_length;
+						//
+						//  hack for strings. have no idea what 8 means but it is different from value for binary blobs, which is good enough
+						//
+						if (fields[i].charsetnr == 8) {
+							length = min(bind[i].buffer_length, strlen(bind[i].buffer));
+						}
 						if (named_columns) {
-							LUA_PUSH_ATTRIB_STRING(name, bind[i].buffer);
+							LUA_PUSH_ATTRIB_LSTRING(name, bind[i].buffer, length);
 						} else {
-							LUA_PUSH_ARRAY_STRING(d, bind[i].buffer);
+							LUA_PUSH_ARRAY_LSTRING(d, bind[i].buffer, length);
 						}
 					}
 				} else if (lua_push == LUA_PUSH_BOOLEAN) {

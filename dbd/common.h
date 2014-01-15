@@ -43,6 +43,11 @@
     lua_pushstring(L, n); \
     lua_pushstring(L, v); \
     lua_rawset(L, -3); 
+	
+#define LUA_PUSH_ATTRIB_LSTRING(n, v, l) \
+    lua_pushstring(L, n); \
+    lua_pushlstring(L, v, l); \
+    lua_rawset(L, -3); 
 
 #define LUA_PUSH_ATTRIB_BOOL(n, v) \
     lua_pushstring(L, n); \
@@ -68,6 +73,11 @@
 
 #define LUA_PUSH_ARRAY_STRING(n, v) \
     lua_pushstring(L, v); \
+    lua_rawseti(L, -2, n); \
+    n++;
+
+#define LUA_PUSH_ARRAY_LSTRING(n, v, l) \
+    lua_pushlstring(L, v, l); \
     lua_rawseti(L, -2, n); \
     n++;
 
@@ -144,3 +154,10 @@ const char *strlower(char *in);
  */
 char *replace_placeholders(lua_State *L, char native_prefix, const char *sql);
 
+#ifndef max
+        #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
+#endif
+
+#ifndef min
+        #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#endif
